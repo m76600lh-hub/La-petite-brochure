@@ -1,360 +1,117 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>Ma petite brochure</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14181d">
+<meta name="description" content="Photographiez un appareil et retrouvez sa notice officielle.">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+<title>Ma Petite Brochure</title>
 <style>
-
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
-  :root{
-    --ink:#14181d; --ink-soft:#1d232b; --paper:#f6f1e4; --paper-line:#e4dcc7;
-    --graphite:#2b2e33; --stamp:#b23b2e; --stamp-dark:#8f2e24; --sage:#6b8f71;
-    --muted:#8b93a1; --focus:#e8b04b;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--ink);
-    background-image:
-      radial-gradient(circle at 20% 0%, rgba(232,176,75,0.06), transparent 45%),
-      radial-gradient(circle at 100% 100%, rgba(107,143,113,0.07), transparent 50%);
-    min-height:100vh; font-family:'Manrope',sans-serif; color:var(--paper);
-    display:flex; justify-content:center; padding:0;
-  }
-  .phone{width:100%;max-width:460px;min-height:100vh;display:flex;flex-direction:column;position:relative;}
-  header{padding:24px 24px 14px;display:flex;align-items:center;gap:12px;}
-  .mark{width:34px;height:34px;border:2px solid var(--focus);border-radius:8px;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;}
-  .mark::before,.mark::after{content:"";position:absolute;width:8px;height:8px;border:2px solid var(--focus);}
-  .mark::before{top:-2px;left:-2px;border-right:none;border-bottom:none;}
-  .mark::after{bottom:-2px;right:-2px;border-left:none;border-top:none;}
-  .mark span{width:10px;height:10px;border-radius:50%;background:var(--focus);}
-  header h1{font-family:'IBM Plex Mono',monospace;font-size:15px;letter-spacing:0.04em;margin:0;color:var(--paper);font-weight:600;}
-  header p{margin:2px 0 0;font-size:11.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:0.03em;}
-  main{flex:1;display:flex;flex-direction:column;padding:0 20px 32px;}
-  .step-label{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--focus);margin:6px 2px 14px;display:flex;align-items:center;gap:8px;}
-  .step-label .n{background:rgba(232,176,75,0.14);border:1px solid rgba(232,176,75,0.4);border-radius:4px;padding:2px 7px;font-weight:600;}
-
-  .cam-frame{background:#000;border-radius:20px;aspect-ratio:3/4;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.06);}
-  .cam-frame video{width:100%;height:100%;object-fit:cover;display:block;}
-  .cam-frame img{width:100%;height:100%;object-fit:cover;display:block;}
-  .corner{position:absolute;width:34px;height:34px;border-color:var(--focus);border-style:solid;border-width:0;pointer-events:none;}
-  .corner.tl{top:16px;left:16px;border-top-width:3px;border-left-width:3px;border-radius:8px 0 0 0;}
-  .corner.tr{top:16px;right:16px;border-top-width:3px;border-right-width:3px;border-radius:0 8px 0 0;}
-  .corner.bl{bottom:16px;left:16px;border-bottom-width:3px;border-left-width:3px;border-radius:0 0 0 8px;}
-  .corner.br{bottom:16px;right:16px;border-bottom-width:3px;border-right-width:3px;border-radius:0 0 8px 0;}
-  .cam-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 30px;font-family:'IBM Plex Mono',monospace;color:var(--muted);font-size:12.5px;}
-  .snap-btn{
-    position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
-    width:64px;height:64px;border-radius:50%;background:var(--paper);
-    border:4px solid rgba(255,255,255,0.35);cursor:pointer;
-  }
-  .snap-btn:active{transform:translateX(-50%) scale(0.92);}
-  .scan-line{position:absolute;left:8%;right:8%;height:2px;background:linear-gradient(90deg,transparent,var(--focus),transparent);box-shadow:0 0 12px 2px rgba(232,176,75,0.6);top:8%;opacity:0;}
-  .cam-frame.scanning .scan-line{opacity:1;animation:sweep 1.6s ease-in-out infinite;}
-  @keyframes sweep{0%{top:8%;}50%{top:88%;}100%{top:8%;}}
-
-  input[type=file]{display:none;}
-  .btn{font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;border:none;border-radius:12px;padding:16px 18px;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s ease, filter .15s ease;}
-  .btn:active{transform:scale(0.98);}
-  .btn-primary{background:var(--focus);color:var(--ink);}
-  .btn-secondary{background:transparent;color:var(--paper);border:1px solid rgba(255,255,255,0.18);}
-  .btn[disabled]{opacity:0.45;cursor:not-allowed;}
-  .row{display:flex;gap:10px;margin-top:14px;}
-  .row .btn{margin-top:0;}
-  .ghost-link{text-align:center;margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);background:none;border:none;text-decoration:underline;cursor:pointer;width:100%;}
-
-  .id-card{background:var(--paper);color:var(--graphite);border-radius:16px;padding:20px;position:relative;box-shadow:0 12px 30px rgba(0,0,0,0.35);}
-  .id-card .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--stamp-dark);font-weight:700;}
-  .id-card textarea{width:100%;border:none;background:transparent;font-family:'Manrope',sans-serif;font-weight:700;font-size:18px;color:var(--graphite);resize:none;margin-top:6px;line-height:1.35;padding:0;}
-  .id-card textarea:focus{outline:none;}
-  .id-thumb{width:56px;height:56px;border-radius:10px;object-fit:cover;border:1px solid var(--paper-line);position:absolute;top:18px;right:18px;}
-  .id-card .divider{height:1px;background:var(--paper-line);margin:16px 0;}
-  .id-card .note{font-size:12.5px;color:#6b6455;line-height:1.5;}
-
-  .lang-list{display:flex;flex-direction:column;gap:10px;}
-  .lang-opt{background:var(--ink-soft);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-weight:600;font-size:15px;transition:border-color .15s ease, background .15s ease;}
-  .lang-opt.selected{border-color:var(--focus);background:rgba(232,176,75,0.08);}
-  .lang-opt .check{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,0.25);}
-  .lang-opt.selected .check{border-color:var(--focus);background:var(--focus);}
-
-  .loader-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:18px;}
-  .spinner{width:40px;height:40px;border-radius:50%;border:3px solid rgba(232,176,75,0.2);border-top-color:var(--focus);animation:spin 0.9s linear infinite;}
-  @keyframes spin{to{transform:rotate(360deg);}}
-  .loader-wrap p{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted);text-align:center;}
-
-  .result-card{background:var(--paper);color:var(--graphite);border-radius:16px;padding:22px;position:relative;overflow:hidden;}
-  .stamp-badge{position:absolute;top:16px;right:-30px;background:var(--sage);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:0.08em;padding:5px 34px;transform:rotate(6deg);box-shadow:0 3px 8px rgba(0,0,0,0.2);}
-  .stamp-badge.miss{background:var(--stamp);}
-  .result-card h3{margin:4px 0 4px;font-size:19px;}
-  .result-card .src{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#6b6455;margin-bottom:14px;word-break:break-all;}
-  .result-card .body-text{font-size:14px;line-height:1.55;color:#3a352c;margin-bottom:18px;white-space:pre-wrap;}
-  .link-btn{display:block;text-align:center;background:var(--ink);color:var(--paper);text-decoration:none;font-weight:700;font-size:14.5px;padding:14px;border-radius:10px;}
-  .progress-dots{display:flex;gap:6px;justify-content:center;padding:16px 0 6px;}
-  .progress-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.15);}
-  .progress-dots span.done{background:var(--focus);}
-  .error-box{background:rgba(178,59,46,0.12);border:1px solid rgba(178,59,46,0.4);color:#e6a89f;font-size:12.5px;padding:12px 14px;border-radius:10px;margin-bottom:14px;font-family:'IBM Plex Mono',monospace;line-height:1.5;}
-  .manual-box{background:var(--ink-soft);border-radius:14px;padding:16px;margin-top:14px;}
-  .manual-box textarea{width:100%;background:transparent;border:none;color:var(--paper);font-family:'Manrope',sans-serif;font-size:14px;resize:vertical;min-height:70px;}
-  .manual-box textarea:focus{outline:none;}
-  .manual-box label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--muted);letter-spacing:0.06em;}
-
+:root{--ink:#14181d;--ink2:#20262e;--paper:#f6f1e4;--line:#e3dac2;--gold:#e8b04b;--muted:#9aa3b1;--green:#6b8f71;--red:#b94b3d}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--ink);color:var(--paper);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}button,input,textarea,select{font:inherit}.app{max-width:520px;margin:auto;min-height:100vh;padding:env(safe-area-inset-top) 18px calc(28px + env(safe-area-inset-bottom))}.top{display:flex;align-items:center;gap:12px;padding:20px 2px 14px}.logo{width:42px;height:42px;border-radius:12px;background:var(--gold);display:grid;place-items:center;box-shadow:0 6px 20px #0006}.logo img{width:31px;height:31px}.top h1{font-size:19px;margin:0}.top p{margin:3px 0 0;color:var(--muted);font-size:12px}.status{margin-left:auto;width:10px;height:10px;border-radius:50%;background:var(--muted);box-shadow:0 0 0 4px #ffffff0d}.status.ok{background:#75c989}.status.bad{background:#dc7468}.card{background:var(--ink2);border:1px solid #ffffff10;border-radius:20px;padding:18px;box-shadow:0 14px 35px #0004}.hero h2{font-size:27px;line-height:1.1;margin:2px 0 8px}.hero p{color:var(--muted);line-height:1.5;margin:0 0 18px}.camera{aspect-ratio:4/5;background:#070809;border-radius:18px;overflow:hidden;position:relative;border:1px solid #ffffff12;display:grid;place-items:center}.camera img{width:100%;height:100%;object-fit:cover}.camera.empty:before{content:'📷';font-size:58px}.camera.empty:after{content:'Photographiez l’étiquette ou la façade';position:absolute;bottom:28%;color:var(--muted);font-size:13px}.corn{position:absolute;width:38px;height:38px;border-color:var(--gold);border-style:solid}.tl{top:17px;left:17px;border-width:3px 0 0 3px}.tr{top:17px;right:17px;border-width:3px 3px 0 0}.bl{bottom:17px;left:17px;border-width:0 0 3px 3px}.br{bottom:17px;right:17px;border-width:0 3px 3px 0}.actions{display:grid;gap:10px;margin-top:14px}.btn{border:0;border-radius:13px;padding:15px 16px;font-weight:750;cursor:pointer}.primary{background:var(--gold);color:var(--ink)}.secondary{background:#ffffff0a;color:var(--paper);border:1px solid #ffffff19}.danger{color:#f0a59b}.btn:disabled{opacity:.45}.fine{font-size:11.5px;color:var(--muted);line-height:1.45;text-align:center;margin:12px 8px 0}.section-title{display:flex;justify-content:space-between;align-items:center;margin:25px 2px 10px}.section-title h3{margin:0;font-size:16px}.link{border:0;background:none;color:var(--gold);padding:4px;cursor:pointer}.field{margin-top:12px}.field label{display:block;color:var(--muted);font-size:12px;margin:0 0 6px}.field textarea,.field select{width:100%;border:1px solid #ffffff18;border-radius:12px;background:#11151a;color:var(--paper);padding:13px;outline:none}.field textarea{min-height:82px;resize:vertical}.loader{padding:34px;text-align:center;color:var(--muted)}.spin{width:38px;height:38px;border:3px solid #ffffff16;border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}@keyframes spin{to{transform:rotate(360deg)}}.result{background:var(--paper);color:#292d32;border-radius:18px;padding:19px;position:relative;overflow:hidden}.badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800;background:#dce8dd;color:#315439}.badge.miss{background:#f1d8d4;color:#7e3027}.result h3{margin:12px 0 4px}.meta{font-size:12px;color:#746d60}.result p{line-height:1.5}.open{display:block;text-align:center;text-decoration:none;background:var(--ink);color:var(--paper);padding:14px;border-radius:11px;font-weight:750;margin-top:14px}.history{display:grid;gap:10px}.history-item{background:var(--ink2);border:1px solid #ffffff0d;border-radius:14px;padding:13px;display:flex;gap:12px;align-items:center}.history-item img{width:55px;height:55px;object-fit:cover;border-radius:10px;background:#111}.history-item strong{display:block;font-size:14px}.history-item small{display:block;color:var(--muted);margin-top:4px}.history-item a{margin-left:auto;color:var(--gold);text-decoration:none;font-size:22px}.empty-history{text-align:center;color:var(--muted);padding:18px}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#050607;color:white;padding:12px 15px;border-radius:11px;max-width:90%;box-shadow:0 10px 30px #0008;z-index:10}.hidden{display:none!important}.footer{text-align:center;margin-top:26px;font-size:11.5px;color:var(--muted)}.footer a{color:var(--muted)}
 </style>
 </head>
 <body>
-<div class="phone">
-  <header>
-    <div class="mark"><span></span></div>
-    <div>
-      <h1>Ma petite brochure</h1>
-      <p>Photo → vraie notice officielle</p>
-    </div>
-  </header>
-  <main id="app"></main>
+<div class="app">
+  <header class="top"><div class="logo"><img src="/assets/icon.svg" alt=""></div><div><h1>Ma Petite Brochure</h1><p>La vraie notice, à partir d’une photo</p></div><span id="apiStatus" class="status" title="État du service"></span></header>
+
+  <main>
+    <section id="captureView" class="card hero">
+      <h2>Quel est cet appareil&nbsp;?</h2>
+      <p>Photographiez surtout la marque, le modèle ou l’étiquette signalétique.</p>
+      <div id="preview" class="camera empty"><img id="previewImg" class="hidden" alt="Photo sélectionnée"><i class="corn tl"></i><i class="corn tr"></i><i class="corn bl"></i><i class="corn br"></i></div>
+      <input id="cameraInput" type="file" accept="image/*" capture="environment" hidden>
+      <input id="galleryInput" type="file" accept="image/*" hidden>
+      <div class="actions">
+        <button id="cameraBtn" class="btn primary">📷 Prendre une photo</button>
+        <button id="galleryBtn" class="btn secondary">🖼️ Choisir dans la galerie</button>
+        <button id="analyzeBtn" class="btn primary hidden">Analyser l’appareil →</button>
+      </div>
+      <p class="fine">La photo sert uniquement à reconnaître l’appareil. Évitez toute donnée personnelle.</p>
+    </section>
+
+    <section id="workView" class="hidden"></section>
+
+    <div class="section-title"><h3>Mes appareils récents</h3><button id="clearHistory" class="link">Effacer</button></div>
+    <section id="history" class="history"></section>
+  </main>
+
+  <footer class="footer"><a href="/confidentialite.html">Confidentialité</a> · <button id="installBtn" class="link hidden">Installer l’application</button></footer>
 </div>
+<div id="toast" class="toast hidden"></div>
 <script>
+const $ = id => document.getElementById(id);
+const state = { dataUrl:'', imageBase64:'', mediaType:'image/jpeg', description:'', language:'Français', deferredInstall:null };
+const HISTORY_KEY = 'mpb_history_v2';
 
-const state = {
-  step:'capture', // capture -> analyzing -> confirm -> language -> searching -> result
-  imageDataUrl:null, imageBase64:null, imageMediaType:'image/jpeg',
-  description:'', language:null, result:null, error:null,
-  camError:false, stream:null, manualMode:false
-};
-const LANGS = [
-  {code:'Francais', flag:'FR'}, {code:'English', flag:'EN'},
-  {code:'Espanol', flag:'ES'}, {code:'Deutsch', flag:'DE'}
-];
-const app = document.getElementById('app');
+function toast(message){ $('toast').textContent=message; $('toast').classList.remove('hidden'); setTimeout(()=>$('toast').classList.add('hidden'),3500); }
+function setWork(html){ $('captureView').classList.add('hidden'); $('workView').classList.remove('hidden'); $('workView').innerHTML=html; window.scrollTo({top:0,behavior:'smooth'}); }
+function reset(){ state.dataUrl='';state.imageBase64='';state.description=''; $('previewImg').src='';$('previewImg').classList.add('hidden');$('preview').classList.add('empty');$('analyzeBtn').classList.add('hidden');$('captureView').classList.remove('hidden');$('workView').classList.add('hidden'); }
 
-function stepIndex(){ return {capture:0, analyzing:0, confirm:1, language:2, searching:2, result:3}[state.step]; }
-function dots(){
-  let html = '<div class="progress-dots">';
-  for(let i=0;i<4;i++){ html += `<span class="${i<=stepIndex() ? 'done':''}"></span>`; }
-  html += '</div>';
-  return html;
+async function compressImage(file){
+  if(!file.type.startsWith('image/')) throw new Error('Ce fichier n’est pas une image.');
+  const source=await createImageBitmap(file);
+  const max=1600, scale=Math.min(1,max/Math.max(source.width,source.height));
+  const canvas=document.createElement('canvas'); canvas.width=Math.round(source.width*scale); canvas.height=Math.round(source.height*scale);
+  canvas.getContext('2d').drawImage(source,0,0,canvas.width,canvas.height);
+  const dataUrl=canvas.toDataURL('image/jpeg',.82); source.close?.();
+  return {dataUrl,imageBase64:dataUrl.split(',')[1],mediaType:'image/jpeg'};
 }
 
-function stopStream(){
-  if(state.stream){ state.stream.getTracks().forEach(t=>t.stop()); state.stream=null; }
+async function chooseFile(file){
+  try{ Object.assign(state,await compressImage(file)); $('previewImg').src=state.dataUrl;$('previewImg').classList.remove('hidden');$('preview').classList.remove('empty');$('analyzeBtn').classList.remove('hidden'); }
+  catch(e){toast(e.message)}
 }
+$('cameraBtn').onclick=()=>$('cameraInput').click(); $('galleryBtn').onclick=()=>$('galleryInput').click();
+$('cameraInput').onchange=e=>e.target.files[0]&&chooseFile(e.target.files[0]); $('galleryInput').onchange=e=>e.target.files[0]&&chooseFile(e.target.files[0]);
 
-async function render(){
-  let html = '';
-
-  if(state.step === 'capture'){
-    if(state.manualMode){
-      html = `
-        <div class="step-label"><span class="n">1</span> Decris l'objet</div>
-        <div class="manual-box">
-          <label>MARQUE, MODELE, TOUT CE QUE TU VOIS</label>
-          <textarea id="manualDesc" placeholder="Ex : Grille-pain Moulinex LT260D11"></textarea>
-        </div>
-        <div class="row">
-          <button class="btn btn-primary" id="manualGo">Continuer &#8594;</button>
-        </div>
-        <button class="ghost-link" id="backToCam">Reessayer la camera</button>
-      `;
-      app.innerHTML = html;
-      document.getElementById('manualGo').addEventListener('click', ()=>{
-        const v = document.getElementById('manualDesc').value.trim();
-        if(!v) return;
-        state.description = v;
-        state.imageDataUrl = null;
-        state.step = 'confirm';
-        render();
-      });
-      document.getElementById('backToCam').addEventListener('click', ()=>{
-        state.manualMode = false; state.camError=false; render();
-      });
-      return;
-    }
-
-    html = `
-      <div class="step-label"><span class="n">1</span> Prends une photo</div>
-      <div class="cam-frame" id="camFrame">
-        <video id="camVideo" autoplay playsinline muted></video>
-        <div class="corner tl"></div><div class="corner tr"></div>
-        <div class="corner bl"></div><div class="corner br"></div>
-        <button class="snap-btn" id="snapBtn" style="display:none;"></button>
-      </div>
-      <p class="card-sub" style="margin-top:14px;text-align:center;color:var(--muted);font-size:12.5px;">On cherche seulement une vraie notice du fabricant. Rien n'est invente.</p>
-      <button class="ghost-link" id="manualBtn">Ca ne marche pas ? Decris l'objet toi-meme</button>
-    `;
-    app.innerHTML = html;
-    document.getElementById('manualBtn').addEventListener('click', ()=>{
-      stopStream(); state.manualMode = true; render();
-    });
-
-    const video = document.getElementById('camVideo');
-    const frame = document.getElementById('camFrame');
-    const snapBtn = document.getElementById('snapBtn');
-    try{
-      const stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'environment' }, audio:false });
-      state.stream = stream;
-      video.srcObject = stream;
-      snapBtn.style.display = 'block';
-      snapBtn.addEventListener('click', ()=>{
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video,0,0);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-        stopStream();
-        state.imageDataUrl = dataUrl;
-        state.imageBase64 = dataUrl.split(',')[1];
-        state.step = 'analyzing';
-        render();
-        analyzeImage();
-      });
-    }catch(err){
-      console.error(err);
-      const msg = document.createElement('div');
-      msg.className = 'cam-msg';
-      msg.innerHTML = "La camera n'est pas accessible ici.<br>Touche en dessous pour decrire l'objet toi-meme.";
-      frame.appendChild(msg);
-    }
-    return;
-  }
-
-  if(state.step === 'analyzing'){
-    html = `
-      <div class="step-label"><span class="n">1</span> Prends une photo</div>
-      <div class="cam-frame scanning">
-        <img src="${state.imageDataUrl}">
-        <div class="scan-line"></div>
-        <div class="corner tl"></div><div class="corner tr"></div>
-        <div class="corner bl"></div><div class="corner br"></div>
-      </div>
-      <div class="loader-wrap"><div class="spinner"></div><p>ON REGARDE LA PHOTO...</p></div>
-    `;
-    app.innerHTML = html;
-    return;
-  }
-
-  if(state.step === 'confirm'){
-    html = `
-      <div class="step-label"><span class="n">2</span> On a compris ca</div>
-      ${state.error ? `<div class="error-box">${state.error}</div>` : ''}
-      <div class="id-card">
-        ${state.imageDataUrl ? `<img class="id-thumb" src="${state.imageDataUrl}">` : ''}
-        <div class="eyebrow">Objet reconnu</div>
-        <textarea id="descBox" rows="3">${state.description}</textarea>
-        <div class="divider"></div>
-        <p class="note">Pas le bon objet ? Corrige le texte au-dessus, comme tu veux.</p>
-      </div>
-      <div class="row">
-        <button class="btn btn-primary" id="confirmBtn">C'est bien ca &#8594;</button>
-      </div>
-      <button class="btn btn-secondary" id="retakeBtn" style="margin-top:10px;">Reprendre une photo</button>
-      ${dots()}
-    `;
-    app.innerHTML = html;
-    document.getElementById('confirmBtn').addEventListener('click', ()=>{
-      state.description = document.getElementById('descBox').value;
-      state.step = 'language'; render();
-    });
-    document.getElementById('retakeBtn').addEventListener('click', ()=>{
-      state.step='capture'; state.imageDataUrl=null; state.imageBase64=null;
-      state.error=null; state.manualMode=false; render();
-    });
-    return;
-  }
-
-  if(state.step === 'language'){
-    html = `
-      <div class="step-label"><span class="n">3</span> Choisis la langue</div>
-      <div class="lang-list">
-        ${LANGS.map(l => `
-          <div class="lang-opt ${state.language===l.code?'selected':''}" data-code="${l.code}">
-            <span>${l.flag} &nbsp; ${l.code}</span><span class="check"></span>
-          </div>
-        `).join('')}
-      </div>
-      <div class="row" style="margin-top:20px;">
-        <button class="btn btn-primary" id="goSearch" ${state.language? '' : 'disabled'}>Trouver la notice &#8594;</button>
-      </div>
-      ${dots()}
-    `;
-    app.innerHTML = html;
-    document.querySelectorAll('.lang-opt').forEach(el=>{
-      el.addEventListener('click', ()=>{ state.language = el.dataset.code; render(); });
-    });
-    const goBtn = document.getElementById('goSearch');
-    if(state.language){
-      goBtn.addEventListener('click', ()=>{ state.step='searching'; render(); searchNotice(); });
-    }
-    return;
-  }
-
-  if(state.step === 'searching'){
-    html = `
-      <div class="step-label"><span class="n">4</span> La notice</div>
-      <div class="loader-wrap"><div class="spinner"></div><p>ON CHERCHE LA VRAIE NOTICE,<br>PAS UNE INVENTEE...</p></div>
-    `;
-    app.innerHTML = html;
-    return;
-  }
-
-  if(state.step === 'result'){
-    const r = state.result || {};
-    html = `
-      <div class="step-label"><span class="n">4</span> La notice</div>
-      <div class="result-card">
-        <div class="stamp-badge ${r.found? '':'miss'}">${r.found ? 'TROUVEE' : 'INTROUVABLE'}</div>
-        <h3>${r.product || state.description}</h3>
-        ${r.sourceUrl ? `<div class="src">${r.sourceUrl}</div>` : ''}
-        <div class="body-text">${r.message || ''}</div>
-        ${r.found && r.sourceUrl ? `<a class="link-btn" href="${r.sourceUrl}" target="_blank">Ouvrir la notice officielle</a>` : ''}
-      </div>
-      <button class="ghost-link" id="restartBtn">Scanner un autre objet</button>
-    `;
-    app.innerHTML = html;
-    document.getElementById('restartBtn').addEventListener('click', ()=>{
-      state.step='capture'; state.imageDataUrl=null; state.imageBase64=null;
-      state.description=''; state.language=null; state.result=null;
-      state.error=null; state.manualMode=false; render();
-    });
-    return;
-  }
-}
-
-async function analyzeImage(){
+$('analyzeBtn').onclick=async()=>{
+  setWork('<div class="card loader"><div class="spin"></div>Nous lisons la marque et la référence…</div>');
   try{
-    const response = await fetch("/api/analyze", {
-      method:"POST", headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ imageBase64: state.imageBase64, mediaType: state.imageMediaType })
-    });
-    const data = await response.json();
-    if(!response.ok) throw new Error(data.error || "Analyse impossible");
-    state.description = data.description || "Objet non identifie -- decris-le toi-meme ici.";
-  }catch(err){
-    console.error(err);
-    state.description = "On n'a pas reussi a analyser la photo -- decris l'objet toi-meme ici.";
-    state.error = "Petit souci pour analyser la photo. Tu peux corriger le texte en dessous.";
-  }
-  state.step = 'confirm';
-  render();
+    const r=await fetch('/api/analyze',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({imageBase64:state.imageBase64,mediaType:state.mediaType})});
+    const data=await r.json(); if(!r.ok) throw new Error(data.error||'Analyse impossible.'); state.description=data.description;
+    showConfirm();
+  }catch(e){ state.description=''; showConfirm(e.message); }
+};
+
+function showConfirm(error=''){
+  setWork(`<div class="card"><h2 style="margin-top:0">Appareil reconnu</h2>${error?`<p style="color:#f0a59b">${escapeHtml(error)}</p>`:''}<div class="field"><label>Vérifiez ou corrigez la marque et la référence</label><textarea id="description">${escapeHtml(state.description)}</textarea></div><div class="field"><label>Langue de la notice</label><select id="language"><option>Français</option><option>English</option><option>Español</option><option>Deutsch</option><option>Italiano</option></select></div><div class="actions"><button id="searchBtn" class="btn primary">Rechercher la notice →</button><button id="restartBtn" class="btn secondary">Reprendre une photo</button></div></div>`);
+  $('restartBtn').onclick=reset; $('searchBtn').onclick=searchNotice;
 }
 
 async function searchNotice(){
+  state.description=$('description').value.trim();state.language=$('language').value;if(!state.description)return toast('Indiquez au moins le type ou la référence.');
+  setWork('<div class="card loader"><div class="spin"></div>Recherche de la notice exacte sur le web…</div>');
   try{
-    const response = await fetch("/api/search", {
-      method:"POST", headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ description: state.description, language: state.language })
-    });
-    const data = await response.json();
-    if(!response.ok) throw new Error(data.error || "Recherche impossible");
-    state.result = data;
-  }catch(err){
-    console.error(err);
-    state.result = { found:false, product: state.description, sourceUrl:'', message:"La recherche n'a pas marche. Verifie ta connexion et reessaie." };
-  }
-  state.step = 'result';
-  render();
+    const r=await fetch('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({description:state.description,language:state.language})});
+    const data=await r.json();if(!r.ok)throw new Error(data.error||'Recherche impossible.');showResult(data);if(data.found)saveHistory(data);
+  }catch(e){setWork(`<div class="card"><p style="color:#f0a59b">${escapeHtml(e.message)}</p><div class="actions"><button id="backBtn" class="btn secondary">Modifier la référence</button><button id="restartBtn" class="btn primary">Nouvel appareil</button></div></div>`);$('backBtn').onclick=showConfirm;$('restartBtn').onclick=reset;}
 }
 
+function showResult(r){
+  const official=r.official?'Source officielle':'Source à vérifier';
+  setWork(`<div class="result"><span class="badge ${r.found?'':'miss'}">${r.found?official:'NOTICE INTROUVABLE'}</span><h3>${escapeHtml(r.product||state.description)}</h3><div class="meta">${escapeHtml([r.manufacturer,r.model].filter(Boolean).join(' · '))}</div><p>${escapeHtml(r.message||'')}</p>${r.found?`<a class="open" href="${escapeAttr(r.sourceUrl)}" target="_blank" rel="noopener">Ouvrir la notice ↗</a><button id="shareBtn" class="btn secondary" style="margin-top:10px">Partager</button>`:''}<button id="restartBtn" class="btn primary" style="margin-top:10px;width:100%">Scanner un autre appareil</button></div>`);
+  $('restartBtn').onclick=reset;
+  if(r.found)$('shareBtn').onclick=async()=>{const share={title:'Notice '+r.product,text:'Notice trouvée avec Ma Petite Brochure',url:r.sourceUrl};if(navigator.share)await navigator.share(share);else{await navigator.clipboard.writeText(r.sourceUrl);toast('Lien copié.')}};
+}
 
-render();
+function saveHistory(r){
+  const items=getHistory();items.unshift({product:r.product,url:r.sourceUrl,date:Date.now(),thumb:state.dataUrl.slice(0,350000)});localStorage.setItem(HISTORY_KEY,JSON.stringify(items.slice(0,8)));renderHistory();
+}
+function getHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]')}catch{return[]}}
+function renderHistory(){const items=getHistory();$('history').innerHTML=items.length?items.map(x=>`<article class="history-item"><img src="${escapeAttr(x.thumb||'/assets/icon.svg')}" alt=""><div><strong>${escapeHtml(x.product)}</strong><small>${new Date(x.date).toLocaleDateString('fr-FR')}</small></div><a href="${escapeAttr(x.url)}" target="_blank" rel="noopener" aria-label="Ouvrir">↗</a></article>`).join(''):'<div class="empty-history">Aucun appareil enregistré pour le moment.</div>';}
+$('clearHistory').onclick=()=>{if(confirm('Effacer tout l’historique enregistré sur ce téléphone ?')){localStorage.removeItem(HISTORY_KEY);renderHistory();}};
 
+function escapeHtml(v=''){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function escapeAttr(v=''){return escapeHtml(v)}
+
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();state.deferredInstall=e;$('installBtn').classList.remove('hidden')});
+$('installBtn').onclick=async()=>{if(state.deferredInstall){state.deferredInstall.prompt();await state.deferredInstall.userChoice;state.deferredInstall=null;$('installBtn').classList.add('hidden')}};
+if('serviceWorker'in navigator)navigator.serviceWorker.register('/service-worker.js').catch(()=>{});
+fetch('/api/status').then(r=>r.json()).then(x=>$('apiStatus').classList.add(x.ready?'ok':'bad')).catch(()=>$('apiStatus').classList.add('bad'));
+renderHistory();
 </script>
 </body>
 </html>

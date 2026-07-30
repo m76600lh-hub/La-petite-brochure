@@ -1,20 +1,22 @@
-# Ma petite brochure
+# Ma Petite Brochure — version 2
 
-Application mobile web qui identifie un appareil photographié et recherche sa notice officielle.
+Application web mobile qui reconnaît un appareil sur une photo et recherche sa notice.
 
 ## Publication sur Vercel
 
-1. Crée un compte Anthropic Console et une clé API.
-2. Crée un dépôt GitHub et ajoute tous les fichiers de ce dossier.
-3. Sur Vercel, choisis **Add New > Project**, importe le dépôt et lance le déploiement.
-4. Dans **Settings > Environment Variables**, ajoute :
-   - `ANTHROPIC_API_KEY` : ta clé secrète
-   - `ANTHROPIC_MODEL` : facultatif, par exemple `claude-sonnet-4-20250514`
-5. Redéploie le projet.
+1. Envoyer tous les fichiers à la racine du dépôt GitHub. Le dossier `api` doit apparaître à côté de `index.html`.
+2. Dans Vercel : projet > Settings > Environment Variables.
+3. Ajouter `ANTHROPIC_API_KEY` avec la clé créée dans la console Anthropic.
+4. Facultatif : ajouter `ANTHROPIC_MODEL` pour choisir le modèle.
+5. Dans Deployments, lancer Redeploy.
 
-## Important avant ouverture au public
+## Fichiers importants
 
-- Ajoute des mentions légales et une politique de confidentialité.
-- Ajoute une limite d'utilisation ou une authentification pour éviter une facture API incontrôlée.
-- Vérifie la disponibilité du nom et du domaine avant de communiquer publiquement.
-- Les images sont envoyées à l'API uniquement pour identifier l'objet ; indique-le clairement aux utilisateurs.
+- `index.html` : application
+- `api/analyze.js` : reconnaissance de la photo
+- `api/search.js` : recherche de la notice
+- `api/status.js` : vérifie si la clé est configurée
+- `manifest.webmanifest` et `service-worker.js` : installation sur téléphone
+- `confidentialite.html` : première page de confidentialité à personnaliser
+
+Ne placez jamais une clé API dans `index.html` ou dans un fichier public.
